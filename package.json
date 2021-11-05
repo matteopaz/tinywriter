@@ -4,11 +4,17 @@
     "description": "A tiny and simple typewriter effect library",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/matteopaz/tinywriter.git",
+        "branch": "main",
+        "platform": "github"
+    },
     "scripts": {
         "build": "tsc && node build.js"
     },
     "author": "matteopaz",
-    "license": "ISC",
+    "license": "MIT",
     "devDependencies": {
         "esbuild": "^0.13.12"
     }
