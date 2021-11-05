@@ -1,0 +1,15 @@
+{
+    "name": "tinywriter",
+    "version": "1.0.0",
+    "description": "A tiny and simple typewriter effect library",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc && node build.js"
+    },
+    "author": "matteopaz",
+    "license": "ISC",
+    "devDependencies": {
+        "esbuild": "^0.13.12"
+    }
+}
