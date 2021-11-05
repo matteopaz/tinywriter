@@ -49,9 +49,9 @@ writer.write(str: string): this
 ```
 
 ### `Typewriter.delete`
-Deletes the given amount of characters, also slightly varies from the given speed per character the same random variance as .write.
+Deletes the given amount of characters or all if `true` is passed in, also slightly varies from the given speed per character the same random variance as .write. If you need to delete all characters, use `writer.delete(true)`, rather than a large number.
 ```
-writer.delete(characters: number): this
+writer.delete(characters: number | true): this
 ```
 ## Flow Control
 ### `Typewriter.wait`
@@ -59,7 +59,7 @@ Waits for the given time in milliseconds, before continuing to the next chained 
 ```
 writer.wait(timeInMs: number): this
 ```
-### `Typewriter.defineLoopStart` & `Typewriter.defineLoopEnd()`
+### `Typewriter.defineLoopStart` & `Typewriter.defineLoopEnd`
 When calling this `Typewriter.defineLoopStart`, you must match it with a `Typewriter.defineLoopEnd()` after some operations. You will not be able to call any more methods after starting a loop, as the loop runs infinitely. To create a finite loop, you may create your own loop and start another `writer` chain. You may also chain events before starting an infinite loop. `Typewriter.defineLoopEnd` is not chainable to avoid confusion.
 ```
 writer.defineLoopStart()

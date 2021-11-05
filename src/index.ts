@@ -1,13 +1,13 @@
 type KeyValue = "startLoop" | "endLoop";
 class Typewriter {
   tag: HTMLElement;
-  text: string[];
+  initial: string[];
   current_text: string[];
   speed: number = 200;
   constructor(elem: HTMLElement, speedInMs: number = 200) {
     this.tag = elem;
     this.speed = speedInMs;
-    this.text = this.tag.innerHTML.split("");
+    this.initial = this.tag.innerHTML.split("");
     this.current_text = [];
   }
 
@@ -18,7 +18,6 @@ class Typewriter {
     memory: {
       stack: Array<() => any>(),
       get() {
-        console.log({ stack: this.stack });
         return [...this.stack];
       },
       push(func: () => Promise<any> | void) {
@@ -31,13 +30,15 @@ class Typewriter {
     queue(obj: (() => Promise<any> | void) | KeyValue) {
       if (obj === "startLoop") {
         this.memorizing = true;
-        this.stack.push(() => (this.looping = true));
-        this.run(this.stack.indexOf(() => (this.looping = true)));
+        const func = () => (this.looping = true);
+        this.stack.push(func);
+        this.run(this.stack.indexOf(func));
         return;
       }
       if (obj === "endLoop") {
-        this.stack.push(this.end_loop);
-        this.run(this.stack.indexOf(this.end_loop));
+        const func = () => this.end_loop;
+        this.stack.push(func);
+        this.run(this.stack.indexOf(func));
         return;
       }
       if (!this.memorizing) {
@@ -54,13 +55,11 @@ class Typewriter {
         this.stack.shift();
         if (this.looping && this.stack.length === 0) {
           this.stack = this.memory.get();
-          console.log(this.stack);
         }
         this.run(0);
       }
     },
     end_loop() {
-      console.log("end loop");
       this.stack = this.memory.get();
       this.run(0);
     },
@@ -131,7 +130,7 @@ class Typewriter {
   }
 
   init() {
-    this.text.forEach((char) => {
+    this.initial.forEach((char) => {
       this.current_text.push(char);
     });
     this.sync();
@@ -143,8 +142,14 @@ class Typewriter {
     return this;
   }
 
-  delete(num: number) {
-    this.callstack.queue(() => this.__delete(num));
+  delete(input: number | true) {
+    let n = 0;
+    if(input === true) {
+      n = this.current_text.length;
+    } else {
+      n = input;
+    }
+    this.callstack.queue(() => this.__delete(n));
     return this;
   }
 
