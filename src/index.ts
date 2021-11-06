@@ -4,11 +4,17 @@ class Typewriter {
   initial: string[];
   current_text: string[];
   speed: number = 200;
-  constructor(elem: HTMLElement, speedInMs: number = 200) {
+  instantaneous_text: string[];
+  cursor: string = "|";
+  constructor(elem: HTMLElement, speedInMs: number = 200, cursor?: string) {
     this.tag = elem;
     this.speed = speedInMs;
     this.initial = this.tag.innerHTML.split("");
     this.current_text = [];
+    this.instantaneous_text = [];
+    if(cursor) {
+      this.cursor = cursor;
+    }
   }
 
   private callstack = {
@@ -70,12 +76,21 @@ class Typewriter {
   }
 
   private sync() {
+    // Syncs the current text with the DOM
     let raw = "";
     this.current_text.forEach((char) => {
-      raw += `<span class="letter">${char}</span>`;
+      if (char.length <= 1) {
+        raw += `<span class="letter">${char}</span>`;
+      } else {
+        raw += char;
+      }
     });
-    raw += `<span class="caret">|</span>`;
+    raw += `<span class="caret">${this.cursor}</span>`;
     this.tag.innerHTML = raw;
+  }
+
+  private __setSpeed(speed: number) {
+    this.speed = speed;
   }
 
   private __wait(time: number) {
@@ -102,6 +117,18 @@ class Typewriter {
         resolve(this);
       }, prevTimeout + 10);
     });
+  }
+
+  private __put(str: string, state: "html" | "text") {
+    if(state === "text") {
+      const chars = str.split("");
+      chars.forEach((char) => {
+        this.current_text.push(char);
+      });
+    } else {
+      this.current_text.push(str);
+    }
+    this.sync();
   }
 
   private __delete(num: number) {
@@ -138,18 +165,42 @@ class Typewriter {
   }
 
   write(str: string) {
+    str.split("").forEach((char) => {
+      this.instantaneous_text.push(char);
+    });
     this.callstack.queue(() => this.__write(str));
     return this;
   }
 
   delete(input: number | true) {
     let n = 0;
-    if(input === true) {
-      n = this.current_text.length;
+    if (input === true) {
+      n = this.instantaneous_text.length;
     } else {
       n = input;
     }
+    for (let i = 0; i < n; i++) {
+      this.instantaneous_text.pop();
+    }
     this.callstack.queue(() => this.__delete(n));
+    return this;
+  }
+
+  put(str: string, state: "html" | "text") {
+    if(!state) throw new Error("Please state put mode, 'text' or 'html'")
+    if (state === "text") {
+      str.split("").forEach((char) => {
+        this.instantaneous_text.push(char);
+      });
+    } else {
+      this.instantaneous_text.push(str);
+    }
+    this.callstack.queue(() => this.__put(str, state));
+    return this;
+  }
+
+  setSpeed(speed: number) {
+    this.callstack.queue(() => this.__setSpeed(speed));
     return this;
   }
 

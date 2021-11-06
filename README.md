@@ -1,5 +1,5 @@
 ﻿# Tinywriter
-Hello, this is a minimal and simple library for creating a typing effect on a text element. It is built with Typescript, and *tiny* at around *<3KB* minified. Perfect for using on a small scale. It is capable of synchronous waiting, writing, deleting, and infinitely looping.
+Hello, this is a powerful but simple library for creating a typing effect on a text element. It is built with Typescript, and *tiny* at  *<4KB* minified. Perfect for using on a small scale. It is capable of synchronous waiting, writing, deleting, and infinitely looping. It has elegant syntax, with method chaining and action queueing, and is able to put and delete HTML.
 
 
 # Usage
@@ -22,18 +22,23 @@ Lets create a more complex sequence. Assuming `writer` is defined as it is above
 writer.init()
   .write("I'll see you in 5 seconds!")
   .wait(5000) // wait in ms
-  .write("  ")
+  .put("<br />", "html")
   .write("Hello!")
-  .end() // end() is not chainable, and it removes the caret from the DOM
+  .wait(1000)
+  .delete(true)
+  .end() // .end() is not chainable, and it removes the caret from the DOM
 ```
+### A warning
+With the ability to put HTML to the DOM unsanitized, take great care in how you use this library. It is not recommended to allow the users to interact with the Typewriter class and its instances. This package was made for special effects usage in mind.
 
 # Complete Documentation
 
 ## Initialization
 ### Constructor
+Instantiates the imported class. Please pass in a valid tag and speed, you may also pass in a special character(s) for the cursor. The speedInMs is the median speed of any 'typing' operation. There will be some variance in the operation speed for realism and the typewriter effect.
 ```
 import Typewriter from 'tinywriter';
-new Typewriter(tag: HTMLElement, speed: number = 200)
+new Typewriter(tag: HTMLElement, speedInMs: number, cursor?: string)
 ```
 ### `Typewriter.init`
 Initializes the object and readies the targeted HTML element via inline-splitting. Takes no arguments and returns this.
@@ -53,7 +58,20 @@ Deletes the given amount of characters or all if `true` is passed in, also sligh
 ```
 writer.delete(characters: number | true): this
 ```
+
+### `Typewriter.put`
+Instantly puts the given string into the DOM. There are two modes, and you are required to specify which one, 'html' and 'text'. HTML mode will attempt to insert the given string as a chunk, raw inside your selected HTML tag. Text mode will do the same thing as `write` but instantaneously.
+```
+writer.put(`<span class="alert">Warning!</span>`, 'html');
+writer.put("Suprise!", 'text');
+```
 ## Flow Control
+
+### `Typewriter.setSpeed`
+Sets the median operation speed from method call onward. Works the same way as the initial speed passed into the constructor.
+```
+writer.setSpeed(timeInMs: number): this
+```
 ### `Typewriter.wait`
 Waits for the given time in milliseconds, before continuing to the next chained task, if any;
 ```
