@@ -1,6 +1,8 @@
 ﻿# Tinywriter
 Hello, this is a powerful but simple library for creating a typing effect on a text element. It is built with Typescript, and *tiny* at  *<4KB* minified. Perfect for using on a small scale. It is capable of synchronous waiting, writing, deleting, and infinitely looping. It has elegant syntax, with method chaining and action queueing, and is able to put and delete HTML.
 
+### [NPM](https://www.npmjs.com/package/tinywriter)
+
 
 # Usage
 Here is the most basic usage case;
