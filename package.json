@@ -10,6 +10,13 @@
         "branch": "main",
         "platform": "github"
     },
+	"keywords": [
+	  "typewriter",
+	  "typer",
+	  "effect",
+	  "small",
+	  "tiny"
+	],
     "scripts": {
         "build": "tsc && node build.js"
     },
