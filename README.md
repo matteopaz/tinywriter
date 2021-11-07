@@ -1,6 +1,6 @@
 ﻿# Tinywriter
 Hello, this is a powerful but simple library for creating a typing effect on a text element. It is built with Typescript, and *tiny* at  *<4KB* minified. Perfect for using on a small scale. It is capable of synchronous waiting, writing, deleting, and infinitely looping. It has elegant syntax, with method chaining and action queueing, and is able to put and delete HTML.
-
+### [Demo](https://jsfiddle.net/dmv2oyas/) - JSFiddle
 ### [NPM](https://www.npmjs.com/package/tinywriter)
 
 
@@ -30,6 +30,9 @@ writer.init()
   .delete(true)
   .end() // .end() is not chainable, and it removes the caret from the DOM
 ```
+### Styling
+The individual letters in the given tag are represented by span tags with the `.letter` class. The caret is also a span tag with the `.caret` class. These can be hooked onto and used for styling. When using `put()` in html mode, keep in mind you can also insert elements with classes and attributes for styling.
+
 ### A warning
 With the ability to put HTML to the DOM unsanitized, take great care in how you use this library. It is not recommended to allow the users to interact with the Typewriter class and its instances. This package was made for special effects usage in mind.
 
